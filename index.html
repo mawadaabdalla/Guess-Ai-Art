@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the AI-Generated Art</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .ai-btn { background: #3498db; color: white; }
+        .real-btn { background: #2ecc71; color: white; }
+        .restart-btn { background: #e74c3c; color: white; display: none; }
+        .result { font-size: 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guess the AI-Generated Art</h1>
+        <img id="image" src="" alt="Guess this image">
+        <div>
+            <button class="ai-btn" onclick="checkAnswer('AI')">AI-Generated</button>
+            <button class="real-btn" onclick="checkAnswer('Real')">Real</button>
+        </div>
+        <p class="result" id="resultText"></p>
+        <p>Score: <span id="score">0</span></p>
+        <button id="nextBtn" onclick="loadNewImage()">Next Image</button>
+        <button id="restartBtn" class="restart-btn" onclick="restartGame()">Start Over</button>
+    </div>
+
+    <script>
+        const images = [
+            { url: "https://i.imgur.com/lvkgrac.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/T8KwVeu.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/IdDHJJQ.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/DkIWMXW.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/tWDbTi5.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/60jdy1h.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/8HLgpsc.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/1kEO7zQ.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/Gza6etU.jpeg", type: "AI" },
+            { url: "https://i.imgur.com/WYjf1rn.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/rb8QDKO.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/0NP5qLU.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/RdjD827.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/gBaJvLZ.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/IvZ4BaA.jpeg", type: "Real" },
+            { url: "https://i.imgur.com/xJ7YDDu.png", type: "Real" },
+            { url: "https://i.imgur.com/qacQJUy.jpeg", type: "Real" },
+        ];
+
+        let shuffledImages = [];
+        let currentIndex = 0;
+        let score = 0;
+
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function loadNewImage() {
+            if (currentIndex >= shuffledImages.length) {
+                document.getElementById("image").style.display = "none";
+                document.getElementById("resultText").innerHTML = `🎉 Game Over! Final Score: ${score}/${shuffledImages.length}`;
+                document.getElementById("nextBtn").style.display = "none";
+                document.getElementById("restartBtn").style.display = "inline-block"; // Show restart button
+                return;
+            }
+
+            const currentImage = shuffledImages[currentIndex];
+            document.getElementById("image").src = currentImage.url;
+            document.getElementById("image").style.display = "block";
+            document.getElementById("resultText").textContent = "";
+        }
+
+        function checkAnswer(userGuess) {
+            const currentImage = shuffledImages[currentIndex];
+
+            if (userGuess === currentImage.type) {
+                score++;
+                document.getElementById("resultText").textContent = "✅ Correct!";
+            } else {
+                document.getElementById("resultText").textContent = `❌ Wrong! It was ${currentImage.type}`;
+            }
+
+            document.getElementById("score").textContent = score;
+            currentIndex++;
+        }
+
+        function restartGame() {
+            shuffledImages = shuffleArray([...images]); // Reshuffle images
+            currentIndex = 0;
+            score = 0;
+            document.getElementById("score").textContent = score;
+            document.getElementById("nextBtn").style.display = "inline-block";
+            document.getElementById("restartBtn").style.display = "none";
+            document.getElementById("image").style.display = "block";
+            loadNewImage();
+        }
+
+        // Shuffle images initially and start the game
+        shuffledImages = shuffleArray([...images]);
+        loadNewImage();
+    </script>
+</body>
+</html>
