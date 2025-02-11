@@ -98,18 +98,24 @@
         }
 
         function checkAnswer(userGuess) {
-            const currentImage = shuffledImages[currentIndex];
+        const currentImage = shuffledImages[currentIndex];
 
-            if (userGuess === currentImage.type) {
-                score++;
-                document.getElementById("resultText").textContent = "✅ Correct!";
-            } else {
-                document.getElementById("resultText").textContent = `❌ Wrong! It was ${currentImage.type}`;
-            }
+        console.log("Current Image URL:", currentImage.url);
+        console.log("Expected Type:", currentImage.type);
+        console.log("User Guess:", userGuess);
 
-            document.getElementById("score").textContent = score;
-            currentIndex++;
+        if (userGuess === currentImage.type) {
+          score++;
+          document.getElementById("resultText").textContent = "✅ Correct!";
+        } else {
+          document.getElementById("resultText").textContent = `❌ Wrong! It was ${currentImage.type}`;
         }
+
+    document.getElementById("score").textContent = score;
+    currentIndex++;
+
+    setTimeout(loadNewImage, 1000); // Load next image after 1 sec delay
+}
 
         function restartGame() {
             shuffledImages = shuffleArray([...images]); // Reshuffle images
